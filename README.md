@@ -52,3 +52,120 @@ print('Длина (символов):', length)
 ```
 
 ![№5 - Вывод пятого задания](img/lab01/img-05.png)
+
+# Лабораторная работа №2
+### №1 
+```
+def min_max(nums: list[float | int]) -> tuple[float | int, float | int]:
+    if not nums:
+        raise ValueError("Список пуст")
+    min_n = nums[0]
+    max_n = nums[0]
+    for num in nums:
+        if num < min_n:
+            min_n = num
+        if num > max_n:
+            max_n = num
+    return (min_n, max_n)
+
+def unique_sorted(nums: list[float | int]) -> list[float | int]:
+    return sorted(set(nums))
+
+
+
+def flatten(mat: list[list | tuple]) -> list:
+    result = []
+    for item in mat:
+        if not isinstance(item, (list, tuple)):
+            raise TypeError("Строка не строка строк матрицы")
+        
+        result.extend(item)
+    
+    return result
+```
+### №2
+```
+def check_rec(mat: list[list]) -> tuple[int, int]:
+    if not mat:
+        return 0, 0
+    
+    rows = len(mat)
+    cols = len(mat[0])
+    
+    for i in range(rows):
+        if len(mat[i]) != cols:
+            raise ValueError("Матрица должна быть прямоугольной")
+    
+    return rows, cols
+
+def transpose(mat: list[list[float | int]]) -> list[list]:
+    rows, cols = check_rec(mat)
+    if rows == 0:
+        return []
+    
+    result = []
+    for j in range(cols):
+        new_row = []
+        for i in range(rows):
+            new_row.append(mat[i][j])
+        result.append(new_row)
+    
+    return result
+
+def row_sums(mat: list[list[float | int]]) -> list[float]:
+    rows, cols = check_rec(mat)
+    
+    if rows == 0:
+        return []
+    
+    sums = []
+    for i in range(rows):
+        row_sum = 0
+        for j in range(cols):
+            row_sum += mat[i][j]
+        sums.append(row_sum)
+    
+    return sums
+
+def col_sums(mat: list[list[float | int]]) -> list[float]:
+
+    rows, cols = check_rec(mat)
+    
+    if cols == 0:
+        return []
+    
+    sums = []
+    for j in range(cols):
+        col_sum = 0
+        for i in range(rows):
+            col_sum += mat[i][j]
+        sums.append(col_sum)
+    
+    return sums
+
+```
+### №3
+```
+def format_record(rec: tuple[str, str, float]) -> str:
+    fio, group, gpa = rec
+    
+    fio_parts = [part.strip() for part in fio.split() if part.strip()]
+    
+    if len(fio_parts) < 2:
+        raise ValueError("ФИО должно содержать фамилию и имя")
+    
+    surname = fio_parts[0]
+    initials = []
+    
+    for i in range(1, min(3, len(fio_parts))):
+        if fio_parts[i]: 
+            initials.append(f"{fio_parts[i][0].upper()}.")
+    
+    form_fio = f"{surname} {''.join(initials)}"
+    
+    form_group = group.strip()
+    
+    form_gpa = f"{gpa:.2f}"
+    
+    return f"{form_fio}, гр. {form_group}, GPA {form_gpa}"
+```
