@@ -101,6 +101,9 @@ print(flatten([[1], [], [2, 3]]))
 #print(flatten([[1, 2], 'ab']))
 
 ```
+![(error 1)](img/lab02/img-2-01.png)
+![error 2)](img/lab02/img-2-02.png)
+![Вывод первого задания](img/lab02/img-2-03.png)
 ### №2
 ```
 def check_rec(mat: list[list]) -> tuple[int, int]:
@@ -178,6 +181,9 @@ print(col_sums([[0, 0], [0, 0]]))
 #print(col_sums([[1, 2], [3]]))
 
 ```
+![(error 1)](img/lab02/img-2-04.png)
+![Вывод второго задания](img/lab02/img-2-05.png)
+
 ### №3
 ```
 def format_record(rec: tuple[str, str, float]) -> str:
@@ -209,3 +215,5 @@ print(format_record(["Петров Пётр Петрович", "IKBO-12", 5.0]))
 print(format_record(["  сидорова  анна   сергеевна ", "ABB-01", 3.999]))
 #print(format_record(["Иванов", "BIVT-25", 4.6]))
 ```
+![(error 1)](img/lab02/img-2-06.png)
+![Вывод третьего задания](img/lab02/img-2-07.png)
