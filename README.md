@@ -54,7 +54,7 @@ print('Длина (символов):', length)
 ![№5 - Вывод пятого задания](img/lab01/img-05.png)
 
 # Лабораторная работа №2
-### №1 
+### №1 Работа со списками
 ```
 def min_max(nums: list[float | int]) -> tuple[float | int, float | int]:
     if not nums:
@@ -104,7 +104,7 @@ print(flatten([[1], [], [2, 3]]))
 ![(error 1)](img/lab02/img-2-01.png)
 ![error 2)](img/lab02/img-2-02.png)
 ![Вывод первого задания](img/lab02/img-2-03.png)
-### №2
+### №2 Функции (для прямоугольных матриц)
 ```
 def check_rec(mat: list[list]) -> tuple[int, int]:
     if not mat:
@@ -184,7 +184,7 @@ print(col_sums([[0, 0], [0, 0]]))
 ![(error 1)](img/lab02/img-2-04.png)
 ![Вывод второго задания](img/lab02/img-2-05.png)
 
-### №3
+### №3 Форматирование записей
 ```
 def format_record(rec: tuple[str, str, float]) -> str:
     fio, group, gpa = rec
