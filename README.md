@@ -258,7 +258,7 @@ print(format_record(["Петров Пётр Петрович", "IKBO-12", 5.0]))
 # Лабораторная работа №3
 ### №1 - text.py
 
-'''
+```
 import re
 
 
@@ -270,18 +270,18 @@ def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
     if not text:
         return ""
     
-    # Замена ё на е
+    
     if yo2e:
         text = text.replace('ё', 'е').replace('Ё', 'Е')
     
-    # Приведение к нижнему регистру
+    
     if casefold:
         text = text.casefold()
     
-    # Замена управляющих символов на пробелы
+    
     text = re.sub(r'[\t\r\n]+', ' ', text)
     
-    # Убирание повторяющихся пробелов
+    
     text = re.sub(r'\s+', ' ', text)
     
     return text.strip()
@@ -295,7 +295,7 @@ def tokenize(text: str) -> list[str]:
     if not text:
         return []
     
-    # Регулярное выражение для поиска слов (буквы/цифры/_ и слова с дефисами)
+    
     pattern = r'\b\w+(?:-\w+)*\b'
     tokens = re.findall(pattern, text)
     
@@ -324,7 +324,7 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
     if not freq:
         return []
     
-    # Создаем список элементов для сортировки
+    
     items = list(freq.items())
     
     # Сортировка по убыванию частоты, при равенстве - по алфавиту
@@ -354,12 +354,12 @@ if __name__ == "__main__":
     print(top_n(tokence2, 2))
 
 
-'''
+```
 ![№1 - Вывод второго задания](img/lab03/img-3-02.png)
 
 ### №2 - text_stats.py
 
-'''
+```
 
 import sys
 
@@ -407,6 +407,6 @@ if __name__ == "__main__":
     main()
 
 
-'''
+```
 ![№2 - Вывод второго задания](img/lab03/img-3-03.png)
 ![№2 - Вывод второго задания](img/lab03/img-3-04.png)
