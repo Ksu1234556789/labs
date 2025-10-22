@@ -414,3 +414,135 @@ if __name__ == "__main__":
 ```
 ![№2 - Вывод второго задания](img/lab03/img-3-03.png)
 ![№2 - Вывод второго задания](img/lab03/img-3-04.png)
+
+# Лабораторная работа №4
+### №1 - io_txt_csv.py
+###### read_text - читает текстовый файл и возвращает его содержимое как строку. Чтение в формате UTF-8 по умолчанию. Для работы с файлами в разных кодировках можно указать: "utf-8" (по умолчанию), "cp1251" или "windows-1251" (русская кодировка Windows), "koi8-r" (русская кодировка для UNIX-систем), "iso-8859-5" (другая русская кодировка), "cp866" (русская кодировка DOS). 
+###### write_csv - записывает данные в CSV.
+###### ensure_parent_dir - создает родительские директории, если они не существуют.
+
+```
+import csv
+from pathlib import Path
+from typing import Iterable, Sequence
+
+def read_text(path: str | Path, encoding: str = "utf-8") -> str:
+    """Читает файл и возвращает текст."""
+    p = Path(path)
+    return p.read_text(encoding=encoding)
+
+def write_csv(rows: Iterable[Sequence], path: str | Path,
+              header: tuple[str, ...] | None = None) -> None:
+    p = Path(path)
+    rows = list(rows)
+    """Записывает данные в CSV файл."""
+    # Проверка одинаковой длины строк
+    if rows:
+        first_len = len(rows[0])
+        for i, row in enumerate(rows):
+            if len(row) != first_len:
+                raise ValueError(f"Строка {i} имеет длину {len(row)}, ожидается {first_len}")
+
+    ensure_parent_dir(path)
+
+    with p.open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        if header is not None:
+            w.writerow(header)
+        for r in rows:
+            w.writerow(r)
+
+def ensure_parent_dir(path: str | Path) -> None:
+    """Создает родительские директории, если их нет."""
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+
+if __name__ == "__main__":
+    txt = read_text("data/input.txt")  # должен вернуть строку
+    print("Прочитано:", txt)
+    write_csv([("word","count"),("test",3)], "data/check.csv") 
+    print("CSV создан")
+
+
+```
+![№1 - Вывод первого задания](img/lab04/img-4-01.png)
+
+
+### №2 - text_report.py
+###### Скрипт анализирует текстовый файл, подсчитывает частоты слов и генерирует CSV отчет.
+
+```
+import sys
+from collections import Counter
+
+try:
+    from lab04.io_txt_csv import read_text, write_csv, ensure_parent_dir
+except ImportError:
+    #Альтернативный импорт для тестирования
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+    from lab04.io_txt_csv import read_text, write_csv, ensure_parent_dir
+from lib.text import normalize, tokenize, count_freq, top_n
+
+def frequencies_from_text(text: str) -> dict[str, int]:
+    """
+    Генерация частот из текста .
+    """
+    tokens = tokenize(normalize(text))
+    return Counter(tokens)
+
+def sorted_word_counts(freq: dict[str, int]) -> list[tuple[str, int]]:
+    """
+    Сортировка частот по шаблону: (-частота, слово).
+    """
+    return sorted(freq.items(), key=lambda kv: (-kv[1], kv[0]))
+
+def generate_report():
+    """
+    Генерирует отчет по частотам слов.
+    """
+    input_file = "data/input.txt"
+    output_file = "data/report.csv"
+    
+    try:
+        # 1 Чтение текста 
+        text = read_text(input_file)
+        
+        # 2 Подсчет частот через шаблонную функцию
+        freq = frequencies_from_text(text)
+        
+        # 3 Сортировка по шаблону
+        sorted_words = sorted_word_counts(freq)
+        
+        # 4 Сохранение отчета
+        ensure_parent_dir(output_file)
+        write_csv(sorted_words, output_file, header=("word", "count"))
+        
+        # 5 Вывод статистики в консоль
+        tokens = tokenize(normalize(text))
+        print(f"Всего слов: {len(tokens)}")
+        print(f"Уникальных слов: {len(freq)}")
+        print("Топ-5:")
+        
+        for word, count in top_n(freq, 5):
+            print(f"{word}: {count}")
+            
+    except FileNotFoundError:
+        print(f"Ошибка: Файл {input_file} не найден")
+        sys.exit(1)
+    except UnicodeDecodeError:
+        print(f"Ошибка: Неверная кодировка файла {input_file}")
+        print("Попробуйте указать кодировку: read_text(path, encoding='ваша кодировка')")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Ошибка: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    generate_report()
+
+
+```
+![№2 - Вывод второго задания](img/lab04/img-4-02.png)
+![№2 - Вывод второго задания](img/lab04/img-4-03.png)
+![№2 - Вывод второго задания](img/lab04/img-4-04.png)
+![№2 - Вывод второго задания](img/lab04/img-4-05.png)
