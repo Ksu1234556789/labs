@@ -428,8 +428,20 @@ from typing import Iterable, Sequence
 
 def read_text(path: str | Path, encoding: str = "utf-8") -> str:
     """Читает файл и возвращает текст."""
+    """
+        Пользователь может выбрать другую кодировку, например: encoding="cp1251"
+        для чтения файлов созданных в Windows на русском языке.
+    """
     p = Path(path)
-    return p.read_text(encoding=encoding)
+
+    if not p.exists():
+        raise FileNotFoundError(f"Файл не найден: {path}")
+    
+    try:
+        return p.read_text(encoding=encoding)
+    except UnicodeDecodeError:
+        raise
+
 
 def write_csv(rows: Iterable[Sequence], path: str | Path,
               header: tuple[str, ...] | None = None) -> None:
@@ -527,13 +539,7 @@ def generate_report():
         for word, count in top_n(freq, 5):
             print(f"{word}: {count}")
             
-    except FileNotFoundError:
-        print(f"Ошибка: Файл {input_file} не найден")
-        sys.exit(1)
-    except UnicodeDecodeError:
-        print(f"Ошибка: Неверная кодировка файла {input_file}")
-        print("Попробуйте указать кодировку: read_text(path, encoding='ваша кодировка')")
-        sys.exit(1)
+
     except Exception as e:
         print(f"Ошибка: {e}")
         sys.exit(1)

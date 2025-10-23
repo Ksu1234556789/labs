@@ -4,8 +4,20 @@ from typing import Iterable, Sequence
 
 def read_text(path: str | Path, encoding: str = "utf-8") -> str:
     """Читает файл и возвращает текст."""
+    """
+        Пользователь может выбрать другую кодировку, например: encoding="cp1251"
+        для чтения файлов созданных в Windows на русском языке.
+    """
     p = Path(path)
-    return p.read_text(encoding=encoding)
+
+    if not p.exists():
+        raise FileNotFoundError(f"Файл не найден: {path}")
+    
+    try:
+        return p.read_text(encoding=encoding)
+    except UnicodeDecodeError:
+        raise
+
 
 def write_csv(rows: Iterable[Sequence], path: str | Path,
               header: tuple[str, ...] | None = None) -> None:

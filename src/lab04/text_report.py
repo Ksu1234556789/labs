@@ -53,13 +53,7 @@ def generate_report():
         for word, count in top_n(freq, 5):
             print(f"{word}: {count}")
             
-    except FileNotFoundError:
-        print(f"Ошибка: Файл {input_file} не найден")
-        sys.exit(1)
-    except UnicodeDecodeError:
-        print(f"Ошибка: Неверная кодировка файла {input_file}")
-        print("Попробуйте указать кодировку: read_text(path, encoding='ваша кодировка')")
-        sys.exit(1)
+
     except Exception as e:
         print(f"Ошибка: {e}")
         sys.exit(1)
