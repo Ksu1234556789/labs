@@ -557,3 +557,106 @@ if __name__ == "__main__":
 ![№2 - Вывод второго задания](img/lab04/img-4-04.png)
 ###### Вывод при input.txt в cp1251 с текстом Привет
 ![№2 - Вывод второго задания](img/lab04/img-4-05.png)
+
+
+# Лабораторная работа №5
+### №1 - json_csv.py
+###### Конвертация из json в csv и из csv в json
+
+```
+
+import json
+import csv
+from pathlib import Path
+
+def json_to_csv(json_path: str, csv_path: str) -> None:
+    """Преобразует JSON-файл в CSV."""
+    if Path(json_path).suffix != '.json' or Path(csv_path).suffix != '.csv':
+        raise TypeError("Неверное расширение файла")
+    
+    with open(json_path, encoding="utf-8") as f: 
+        data = json.load(f)
+    
+    if not data or not isinstance(data, list) or not all(isinstance(item, dict) for item in data):
+        raise ValueError("Пустой JSON или неподдерживаемая структура")
+    
+    # Собираем все уникальные ключи из всех объектов
+    fieldnames = sorted({key for item in data for key in item.keys()})
+    
+    with open(csv_path, "w", newline="", encoding="utf-8") as cf:
+        writer = csv.DictWriter(cf, fieldnames=fieldnames)
+        writer.writeheader()
+        # Заполняем отсутствующие поля пустыми строками
+        for item in data:
+            row = {field: item.get(field, '') for field in fieldnames}
+            writer.writerow(row)
+
+def csv_to_json(csv_path: str, json_path: str) -> None:
+    """Преобразует CSV в JSON (список словарей)."""
+    if Path(csv_path).suffix != '.csv' or Path(json_path).suffix != '.json':
+        raise TypeError("Неверное расширение файла")
+    
+    with open(csv_path, 'r', encoding='utf-8', newline='') as cf:
+        reader = csv.DictReader(cf)
+        lt_rows = list(reader)
+        
+    if not lt_rows:
+        raise ValueError("CSV файл пуст или содержит только заголовок")
+    
+    with open(json_path, 'w', encoding='utf-8') as jf:
+        json.dump(lt_rows, jf, ensure_ascii=False, indent=2)
+
+
+csv_to_json('data/samples/people.csv', 'data/out/people_from_csv.json')
+json_to_csv("data/samples/people.json", "data/out/people_from_json.csv")
+
+```
+###### Сконвертированные csv и json
+![№1 - первое задание](img/lab05/img-1.png)
+![№1 - первое задание](img/lab05/img-2.png)
+
+### №2 - csv_xlsx.py
+###### Конвертация из csv в xlsx
+
+```
+from openpyxl import Workbook
+import csv
+from pathlib import Path
+
+def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
+    """Конвертирует CSV в XLSX."""
+    if not Path(csv_path).exists():
+        raise FileNotFoundError(f"CSV файл не найден: {csv_path}")
+    
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Sheet1"
+    
+    try:
+        with open(csv_path, encoding="utf-8") as f:
+            reader = csv.reader(f)
+            rows = list(reader)
+            
+            if not rows:
+                raise ValueError("CSV файл пуст")
+            
+            for row in rows:
+                ws.append(row)
+            
+            # Автоширина колонок
+            for column in ws.columns:
+                if column:  # Проверяем что колонка не пустая
+                    mx = max(len(str(cell.value)) for cell in column)
+                    ws.column_dimensions[column[0].column_letter].width = max(mx + 2, 8)
+        
+        wb.save(xlsx_path)
+        
+    except csv.Error as e:
+        raise ValueError(f"Ошибка чтения CSV: {e}")
+    
+csv_to_xlsx('data/samples/cities.csv', 'data/out/cities.xlsx')
+csv_to_xlsx('data/samples/people.csv', 'data/out/people.xlsx')
+
+```
+![№2 - второго задание](img/lab05/img-3.png)
+![№1 - второго задание](img/lab05/img-4.png)
