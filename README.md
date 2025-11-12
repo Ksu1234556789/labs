@@ -659,4 +659,175 @@ csv_to_xlsx('data/samples/people.csv', 'data/out/people.xlsx')
 
 ```
 ![№2 - второго задание](img/lab05/img-3.png)
-![№1 - второго задание](img/lab05/img-4.png)
+![№2 - второго задание](img/lab05/img-4.png)
+
+
+# Лабораторная работа №6
+### №1 - cli_text.py
+###### Реализация консольных утилит для работы с текстом
+
+```
+import argparse
+from pathlib import Path
+
+try:
+    from lib.text import normalize, tokenize, count_freq, top_n
+except ImportError:
+    # Альтернативный импорт для тестирования
+    import os
+    import sys
+    sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+    from lib.text import normalize, tokenize, count_freq, top_n
+
+
+def main():
+    parser = argparse.ArgumentParser(description="CLI‑утилиты")
+    subparsers = parser.add_subparsers(dest="command")
+
+    # подкоманда cat 
+    cat_parser = subparsers.add_parser("cat", help="Вывести содержимое файла")
+    cat_parser.add_argument("--input", required=True, help="Путь к файлу для вывода")
+    cat_parser.add_argument("-n", action="store_true", help="Нумеровать строки")
+
+    # подкоманда stats 
+    stats_parser = subparsers.add_parser("stats", help="Частоты слов")
+    stats_parser.add_argument("--input", required=True, help="Путь к текстовому файлу")
+    stats_parser.add_argument("--top", type=int, default=5, help="Количество топ-слов")
+
+    args = parser.parse_args()
+
+    if not args.command:
+        parser.print_help()
+        return
+
+    file_path = Path(args.input)
+    if not file_path.exists():
+        parser.error(f"Файл '{args.input}' не найден")
+
+    if args.command == "cat":
+        try:
+            with file_path.open("r", encoding="utf-8") as f:
+                for i, line in enumerate(f, start=1):
+                    line = line.rstrip("\n")
+                    if args.n:
+                        print(f"{i:6}  {line}")
+                    else:
+                        print(line)
+        except Exception as e:
+            parser.error(f"Ошибка при чтении файла: {e}")
+
+    elif args.command == "stats":
+        try:
+            with file_path.open("r", encoding="utf-8") as f:
+                text = f.read()
+            
+            normalized = normalize(text)
+            words = tokenize(normalized)
+            freq = count_freq(words)
+            top_words = top_n(freq, args.top)
+
+            if not top_words:
+                print("Слова не найдены в файле")
+                return
+
+            print(f"Топ-{args.top} самых частых слов:")
+            print("Слово\t\tЧастота")
+            print("-" * 20)
+            for word, count in top_words:
+                print(f"{word:<15} {count}")
+
+        except Exception as e:
+            parser.error(f"Ошибка при анализе текста: {e}")
+
+if __name__ == "__main__":
+    main()
+
+```
+![№1 - нумирование строк](img/lab06/img-6-01.png)
+![№1 - частота слов](img/lab06/img-6-02.png)
+![№1 - показ](img/lab06/img-6-06.png)
+
+
+### №2 - cli_convert.py
+###### Реализация консольных утилит для конвертации данных между форматами
+
+```
+import argparse
+from pathlib import Path
+try:
+    from lab05.json_csv import *
+except ImportError:
+    # Альтернативный импорт для тестирования
+    import os
+    import sys
+    sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+    from lab05.json_csv import *
+try:
+    from lab05.csv_xlsx import *
+except ImportError:
+    # Альтернативный импорт для тестирования
+    import os
+    import sys
+    sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+    from lab05.csv_xlsx import *
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Конвертер JSON↔CSV, CSV→XLSX")
+    sub = parser.add_subparsers(dest="cmd")
+
+    # json → csv
+    json2csv_parser = sub.add_parser("json2csv", help="Конвертировать JSON в CSV")
+    json2csv_parser.add_argument("--in", dest="input", required=True, help="Путь к входному JSON")
+    json2csv_parser.add_argument("--out", dest="output", required=True, help="Путь к выходному CSV")
+
+    # csv → json
+    csv2json_parser = sub.add_parser("csv2json", help="Конвертировать CSV в JSON")
+    csv2json_parser.add_argument("--in", dest="input", required=True, help="Путь к входному CSV")
+    csv2json_parser.add_argument("--out", dest="output", required=True, help="Путь к выходному JSON")
+
+    # csv → xlsx
+    csv2xlsx_parser = sub.add_parser("csv2xlsx", help="Конвертировать CSV в XLSX")
+    csv2xlsx_parser.add_argument("--in", dest="input", required=True, help="Путь к входному CSV")
+    csv2xlsx_parser.add_argument("--out", dest="output", required=True, help="Путь к выходному XLSX")
+
+    args = parser.parse_args()
+
+    if not args.cmd:
+        parser.print_help()
+        return
+
+    input_path = Path(args.input)
+    if not input_path.exists():
+        parser.error(f"Входной файл '{args.input}' не найден")
+
+    # Создаем выходную директорию если не существует
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        if args.cmd == "json2csv":
+            json_to_csv(args.input, args.output)
+            print(f"Успешно конвертировано: {args.input} -> {args.output}")
+            
+        elif args.cmd == "csv2json":
+            csv_to_json(args.input, args.output)
+            print(f"Успешно конвертировано: {args.input} -> {args.output}")
+            
+        elif args.cmd == "csv2xlsx":
+            csv_to_xlsx(args.input, args.output)
+            print(f"Успешно конвертировано: {args.input} -> {args.output}")
+            
+    except Exception as e:
+        parser.error(f"Ошибка конвертации: {e}")
+
+
+if __name__ == "__main__":
+    main()
+
+```
+
+![№2 - json](img/lab06/img-6-03.png)
+![№2 - csv](img/lab06/img-6-04.png)
+![№2 - xlsx](img/lab06/img-6-05.png)
+![№2 - показ](img/lab06/img-6-07.png)
