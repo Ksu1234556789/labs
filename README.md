@@ -771,9 +771,8 @@ except ImportError:
     sys.path.append(os.path.dirname(os.path.dirname(__file__)))
     from lab05.csv_xlsx import *
 
-
 def main():
-    parser = argparse.ArgumentParser(description="Конвертер JSON↔CSV, CSV→XLSX")
+    parser = argparse.ArgumentParser(description="Конвертер JSON в CSV, CSV в JSON, CSV в XLSX")
     sub = parser.add_subparsers(dest="cmd")
 
     # json → csv
