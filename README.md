@@ -1341,3 +1341,4 @@ if __name__ == "__main__": # Проверка запущен ли скрипт �
 
 ![students_input.json](img/lab08/img-08-02.png)
 ![students_output.json](img/lab08/img-08-03.png)
+![students_output.json](img/lab08/img-08-04.png)
