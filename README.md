@@ -1274,7 +1274,7 @@ from typing import List
 from models import Student
 
 def students_to_json(students: List[Student], path: str) -> None:
-    """Сериализация с базовой проверкой"""
+    
     if not students:
         print("Внимание: пустой список студентов")
         return
@@ -1289,7 +1289,7 @@ def students_to_json(students: List[Student], path: str) -> None:
         print(f"Ошибка при сохранении: {e}")
 
 def students_from_json(path: str) -> List[Student]:
-    """Десериализация с обработкой ошибок"""
+    
     try:
         with open(path, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -1329,10 +1329,10 @@ if __name__ == "__main__": # Проверка запущен ли скрипт �
         Student("Попова Александра", "2002-05-16", "SE-03", 3.8)
     ]
     
-    # Сериализация
+    
     students_to_json(students, "data/lab08/students_output.json")
     
-    # Десериализация
+ 
     loaded_students = students_from_json("data/lab08/students_input.json")
     for student in loaded_students:
         print(student)
