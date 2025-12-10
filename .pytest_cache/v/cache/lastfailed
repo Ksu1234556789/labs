@@ -1,0 +1,19 @@
+{
+  "src/tests/test_json_csv.py::TestCsvToJsonErrors::test_csv_to_json_errors[empty_header-\\nAlice,25-ValueError]": true,
+  "src/tests/test_json_csv.py::TestCsvToJsonErrors::test_csv_to_json_errors[empty_columns-name,,age\\nAlice,25,30-ValueError]": true,
+  "src/tests/test_json_csv.py::TestUnexpectedErrors::test_unexpected_errors": true,
+  "src/tests/test_json_csv.py::TestEdgeCases::test_csv_empty_data_with_header": true,
+  "src/tests/test_json_csv.py::TestFileExtensions::test_json_to_csv_wrong_extension": true,
+  "src/tests/test_json_csv.py::TestFileExtensions::test_csv_to_json_wrong_extension": true,
+  "src/tests/text_test.py::TestIntegration::test_full_pipeline": true,
+  "tests/text_test.py::test_normalize[3-\\u0422\\u0435\\u043a\\u0441\\u0442 \\u0434\\u043e\\u043b\\u0436\\u0435\\u043d \\u0431\\u044b\\u0442\\u044c \\u0441\\u0442\\u0440\\u043e\\u043a\\u043e\\u0439]": true,
+  "tests/text_test.py::test_tokenize[3-\\u0422\\u0435\\u043a\\u0441\\u0442 \\u0434\\u043e\\u043b\\u0436\\u0435\\u043d \\u0431\\u044b\\u0442\\u044c \\u0441\\u0442\\u0440\\u043e\\u043a\\u043e\\u0439]": true,
+  "tests/text_test.py::test_tokenize[-3-n \\u0434\\u043e\\u043b\\u0436\\u043d\\u043e \\u0431\\u044b\\u0442\\u044c \\u043d\\u0435\\u043e\\u0442\\u0440\\u0438\\u0446\\u0430\\u0442\\u0435\\u043b\\u044c\\u043d\\u044b\\u043c \\u0446\\u0435\\u043b\\u044b\\u043c \\u0447\\u0438\\u0441\\u043b\\u043e\\u043c]": true,
+  "tests/text_test.py::test_top_n_negstive": true,
+  "tests/text_test.py::test_top_n_is_dictionary": true,
+  "tests/text_test.py::test_normalize[3-\\u0422\\u0435\\u043a\\u0441\\u0442jjjjdjsprjpoeqvjpoq \\u0434\\u043e\\u043b\\u0436\\u0435\\u043d \\u0431\\u044b\\u0442\\u044c \\u0441\\u0442\\u0440\\u043e\\u043a\\u043e\\u0439]": true,
+  "tests/text_test.py::test_normalize[3-expected6]": true,
+  "tests/text_test.py::test_normalize[3-ValueError]": true,
+  "src/lab07/tests/test_json_csv.py": true,
+  "src/lab07/tests/text_test.py": true
+}
